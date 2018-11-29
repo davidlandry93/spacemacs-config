@@ -14,7 +14,7 @@
      auto-completion
      better-defaults
      emacs-lisp
-     ;; git
+     git
      markdown
      org
      python
@@ -121,15 +121,49 @@
    dotspacemacs-search-tools '("ag" "pt" "ack" "grep")
    dotspacemacs-default-package-repository nil
    dotspacemacs-whitespace-cleanup nil
+   dotspacemacs-mode-line-theme 'spacemacs
    ))
 
-(defun dotspacemacs/user-init ())
+(defun dotspacemacs/user-init ()
 
-(defun dotspacemacs/user-config ()
-  (ido-mode -1)
+  (defun dotspacemacs/user-config ()
+    (ido-mode -1))
 
+  (defun dl93/find-dot-spacemacs ()
+    (interactive)
+    (find-file "~/repos/eccc-spacemacs-config/dotspacemacs.el"))
+
+  (defun dl93/find-notes ()
+    (interactive)
+    (find-file "~/org/notes.org"))
 
   ;; Global shortcuts.
-  (evil-leader/set-key "w1" 'delete-other-windows)
-  (evil-leader/set-key "ot" 'terminal-here)
-  (evil-leader/set-key "ow" 'ace-window))
+  (evil-leader/set-key "fa"  'dl93/find-notes)
+  (evil-leader/set-key "fed" 'dl93/find-dot-spacemacs)
+  (evil-leader/set-key "w1"  'delete-other-windows)
+  (evil-leader/set-key "ot"  'terminal-here)
+  (evil-leader/set-key "ow"  'ace-window)
+
+  ;; Ignore some directories in project search.
+  (setq helm-ag-use-grep-ignore-list t)
+  (setq helm-grep-ignored-directories '(".git/" "build/"))
+
+  ;; C/C++
+  (evil-leader/set-key-for-mode 'c++-mode "fb" 'clang-format-buffer)
+  (evil-leader/set-key-for-mode 'c++-mode "fr" 'clang-format-region)
+
+  ;; org-mode
+  (setq org-agenda-files '("~/org/")
+        org-catch-invisible-edits "show"
+        org-default-notes-file "~/org/inbox.org"
+        org-directory "~/org/"
+        org-enforce-todo-dependencies t
+        org-refile-targets '((org-agenda-files :maxlevel . 4))
+        org-tags-match-list-sublevels 'indented
+        org-todo-keywords '((sequence "BACKLOG" "TODO" "IN PROGRESS" "WAITING" "|" "DONE" "DROPPED")
+                            (sequence "QUESTION" "|" "ANSWER")
+                            (sequence "TODISCUSS" "|" "DISCUSSED"))
+        org-refile-targets '((nil :maxlevel . 4)
+                             (org-agenda-files :maxlevel . 4)))
+
+  (add-hook 'org-mode-hook (lambda() (org-indent-mode -1))))
