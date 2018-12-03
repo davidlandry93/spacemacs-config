@@ -10,11 +10,12 @@
    dotspacemacs-configuration-layer-path '()
    dotspacemacs-configuration-layers
    '(
-     helm
      auto-completion
      better-defaults
+     bibtex
      emacs-lisp
      git
+     helm
      markdown
      org
      python
@@ -124,18 +125,16 @@
    dotspacemacs-mode-line-theme 'spacemacs
    ))
 
-(defun dotspacemacs/user-init ()
+(defun dotspacemacs/user-init ())
 
-  (defun dotspacemacs/user-config ()
-    (ido-mode -1))
+(defun dotspacemacs/user-config ()
+  (ido-mode -1)
 
-  (defun dl93/find-dot-spacemacs ()
-    (interactive)
-    (find-file "~/repos/eccc-spacemacs-config/dotspacemacs.el"))
+  (defmacro find-a-file-defun (defun-name file)
+    `(defun ,defun-name () (interactive) (find-file-existing ,file)))
 
-  (defun dl93/find-notes ()
-    (interactive)
-    (find-file "~/org/notes.org"))
+  (find-a-file-defun dl93/find-dot-spacemacs "~/repos/eccc-spacemacs-config/dotspacemacs.el")
+  (find-a-file-defun dl93/find-notes "~/org/notes.org")
 
   ;; Global shortcuts.
   (evil-leader/set-key "fa"  'dl93/find-notes)
@@ -160,10 +159,19 @@
         org-enforce-todo-dependencies t
         org-refile-targets '((org-agenda-files :maxlevel . 4))
         org-tags-match-list-sublevels 'indented
-        org-todo-keywords '((sequence "BACKLOG" "TODO" "IN PROGRESS" "WAITING" "|" "DONE" "DROPPED")
+        org-todo-keywords '((sequence "BACKLOG" "TODO" "IN PROGRESS" "WAITING" "|" "DONE")
                             (sequence "QUESTION" "|" "ANSWER")
                             (sequence "TODISCUSS" "|" "DISCUSSED"))
         org-refile-targets '((nil :maxlevel . 4)
                              (org-agenda-files :maxlevel . 4)))
 
-  (add-hook 'org-mode-hook (lambda() (org-indent-mode -1))))
+  (add-hook 'org-mode-hook (lambda() (org-indent-mode -1)))
+
+  ;; Bibtex
+  (setq org-ref-default-bibliography '("~/TemporaryDocuments/bibliography.bib")
+        org-ref-pdf-directory "~/drive2/papers"
+        org-ref-bibliography-notes "~/org/bibliography_notes.org")
+
+  (evil-leader/set-key "fB" (find-a-file-defun
+                             dl93/find-bibliography
+                             "~/TemporaryDocuments/bibliography.bib")))
