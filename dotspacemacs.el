@@ -26,7 +26,7 @@
      syntax-checking
      version-control
      )
-   dotspacemacs-additional-packages '()
+   dotspacemacs-additional-packages '(openwith)
    dotspacemacs-frozen-packages '()
    dotspacemacs-excluded-packages '()
    dotspacemacs-install-packages 'used-only))
@@ -130,6 +130,9 @@
 (defun dotspacemacs/user-config ()
   (ido-mode -1)
 
+  (openwith-mode 1)
+  (setq openwith-associations '(("\\.pdf\\'" "evince" (file))))
+
   (defmacro find-a-file-defun (defun-name file)
     `(defun ,defun-name () (interactive) (find-file-existing ,file)))
 
@@ -168,10 +171,17 @@
   (add-hook 'org-mode-hook (lambda() (org-indent-mode -1)))
 
   ;; Bibtex
-  (setq org-ref-default-bibliography '("~/TemporaryDocuments/bibliography.bib")
-        org-ref-pdf-directory "~/drive2/papers"
-        org-ref-bibliography-notes "~/org/bibliography_notes.org")
+  (let ((bibliography-files '("~/TemporaryDocuments/bibliography.bib"))
+        (paper-directory "~/drive2/papers")
+        (notes-file "~/org/bibliography-notes.org"))
+    (setq org-ref-default-bibliography bibliography-files
+        org-ref-pdf-directory paper-directory
+        org-ref-bibliography-notes notes-file
+        bibtex-completion-bibliography bibliography-files
+        bibtex-completion-library-path paper-directory
+        bibtex-completion-notes-path notes-file))
 
+  (evil-leader/set-key "ab" 'helm-bibtex)
   (evil-leader/set-key "fB" (find-a-file-defun
                              dl93/find-bibliography
                              "~/TemporaryDocuments/bibliography.bib")))
