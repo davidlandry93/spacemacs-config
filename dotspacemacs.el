@@ -13,9 +13,11 @@
      auto-completion
      better-defaults
      bibtex
+     csv
      emacs-lisp
      git
      helm
+     javascript
      markdown
      org
      python
@@ -26,7 +28,11 @@
      syntax-checking
      version-control
      )
-   dotspacemacs-additional-packages '(openwith)
+   dotspacemacs-additional-packages '(forest-blue-theme
+                                      howm
+                                      monokai-theme
+                                      northcode-theme
+                                      openwith)
    dotspacemacs-frozen-packages '()
    dotspacemacs-excluded-packages '()
    dotspacemacs-install-packages 'used-only))
@@ -38,7 +44,7 @@
    dotspacemacs-check-for-update nil
    dotspacemacs-elpa-subdirectory nil
    dotspacemacs-editing-style 'vim
-   dotspacemacs-verbose-loading nil
+   dotspacemacs-verbose-loading t
    dotspacemacs-startup-banner 'official
    ;; List of items to show in startup buffer or an association list of
    ;; the form `(list-type . list-size)`. If nil then it is disabled.
@@ -52,7 +58,8 @@
                                 (projects . 7))
    dotspacemacs-startup-buffer-responsive t
    dotspacemacs-scratch-mode 'text-mode
-   dotspacemacs-themes '(spacemacs-dark
+   dotspacemacs-themes '(monokai
+                         spacemacs-dark
                          spacemacs-light)
    dotspacemacs-colorize-cursor-according-to-state t
    dotspacemacs-default-font '("Source Code Pro"
@@ -130,6 +137,14 @@
 (defun dotspacemacs/user-config ()
   (ido-mode -1)
 
+  (defun proced-settings ()
+    (proced-toggle-auto-update t))
+  (add-hook 'proced-mode-hook 'proced-settings)
+
+  ;; TRAMP
+  ;; (setq tramp-debug-on-error t)
+  (eval-after-load 'tramp (lambda () (add-to-list 'tramp-remote-path "/home/dav000/local/bin")))
+
   (openwith-mode 1)
   (setq openwith-associations '(("\\.pdf\\'" "evince" (file))))
 
@@ -184,4 +199,9 @@
   (evil-leader/set-key "ab" 'helm-bibtex)
   (evil-leader/set-key "fB" (find-a-file-defun
                              dl93/find-bibliography
-                             "~/TemporaryDocuments/bibliography.bib")))
+                             "~/TemporaryDocuments/bibliography.bib"))
+
+
+  ;; Howm
+  (setq howm-directory "~/howm/"
+        howm-file-name-format "%Y/%U/%Y-%m-%d-%H%M%S.txt"))
