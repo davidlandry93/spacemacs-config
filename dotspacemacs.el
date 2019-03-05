@@ -13,6 +13,7 @@
      auto-completion
      better-defaults
      bibtex
+     c-c++
      csv
      emacs-lisp
      git
@@ -62,8 +63,8 @@
                          spacemacs-dark
                          spacemacs-light)
    dotspacemacs-colorize-cursor-according-to-state t
-   dotspacemacs-default-font '("Source Code Pro"
-                               :size 15
+   dotspacemacs-default-font '("Iosevka"
+                               :size 16
                                :weight normal
                                :width normal
                                :powerline-scale 1.1)
@@ -102,7 +103,7 @@
    dotspacemacs-inactive-transparency 70
    dotspacemacs-show-transient-state-title t
    dotspacemacs-show-transient-state-color-guide t
-   dotspacemacs-mode-line-unicode-symbols t
+   dotspacemacs-mode-line-unicode-symbols nil
    dotspacemacs-smooth-scrolling t
    ;; Control line numbers activation.
    ;; If set to `t' or `relative' line numbers are turned on in all `prog-mode' and
@@ -132,9 +133,35 @@
    dotspacemacs-mode-line-theme 'spacemacs
    ))
 
-(defun dotspacemacs/user-init ())
+(defun dotspacemacs/user-init ()
+  ;; On the EC network your TMPDIR gets assigned to the process id... but it is not automatically created for emacs.
+  (when (boundp 'dl93/tmpdir)
+    (setenv "TMPDIR" dl93/tmpdir))
+
+  (let ((tmpdir (getenv "TMPDIR")))
+    (if (not (file-directory-p tmpdir))
+      (make-directory tmpdir))))
+
+
 
 (defun dotspacemacs/user-config ()
+  ;; Git-gitter workaround with tramp.
+  ;; See https://github.com/nonsequitur/git-gutter-plus/issues/42
+  (with-eval-after-load 'git-gutter+
+    (defun git-gutter+-remote-default-directory (dir file)
+      (let* ((vec (tramp-dissect-file-name file))
+             (method (tramp-file-name-method vec))
+             (user (tramp-file-name-user vec))
+             (domain (tramp-file-name-domain vec))
+             (host (tramp-file-name-host vec))
+             (port (tramp-file-name-port vec)))
+        (tramp-make-tramp-file-name method user domain host port dir)))
+
+    (defun git-gutter+-remote-file-path (dir file)
+      (let ((file (tramp-file-name-localname (tramp-dissect-file-name file))))
+        (replace-regexp-in-string (concat "\\`" dir) "" file))))
+
+
   (ido-mode -1)
 
   (defun proced-settings ()
@@ -142,7 +169,7 @@
   (add-hook 'proced-mode-hook 'proced-settings)
 
   ;; TRAMP
-  ;; (setq tramp-debug-on-error t)
+  (setq tramp-debug-on-error t)
   (eval-after-load 'tramp (lambda () (add-to-list 'tramp-remote-path "/home/dav000/local/bin")))
 
   (openwith-mode 1)
