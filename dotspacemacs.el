@@ -18,6 +18,7 @@
      emacs-lisp
      git
      helm
+     html
      javascript
      markdown
      org
@@ -59,9 +60,11 @@
                                 (projects . 7))
    dotspacemacs-startup-buffer-responsive t
    dotspacemacs-scratch-mode 'text-mode
-   dotspacemacs-themes '(monokai
-                         spacemacs-dark
-                         spacemacs-light)
+   dotspacemacs-themes (if (boundp 'dl93/default-themes)
+                           dl93/default-themes
+                         '(monokai
+                           spacemacs-dark
+                           spacemacs-light))
    dotspacemacs-colorize-cursor-according-to-state t
    dotspacemacs-default-font '("Iosevka"
                                :size 16
@@ -209,12 +212,13 @@
                             (sequence "TODISCUSS" "|" "DISCUSSED"))
         org-refile-targets '((nil :maxlevel . 4)
                              (org-agenda-files :maxlevel . 4)))
+  (evil-leader/set-key-for-mode 'org-mode "t" 'org-todo)
 
   (add-hook 'org-mode-hook (lambda() (org-indent-mode -1)))
 
   ;; Bibtex
-  (let ((bibliography-files '("~/TemporaryDocuments/bibliography.bib"))
-        (paper-directory "~/drive2/papers")
+  (let ((bibliography-files '("~/papers/database.bib"))
+        (paper-directory "~/papers/")
         (notes-file "~/org/bibliography-notes.org"))
     (setq org-ref-default-bibliography bibliography-files
         org-ref-pdf-directory paper-directory
