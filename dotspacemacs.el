@@ -119,7 +119,7 @@
    ;;   :size-limit-kb 1000)
    ;; (default nil)
    dotspacemacs-line-numbers t
-   dotspacemacs-folding-method 'evil
+   dotspacemacs-folding-method 'origami
    dotspacemacs-smartparens-strict-mode nil
    ;; If non-nil pressing the closing parenthesis `)' key in insert mode passes
    ;; over any automatically added closing parenthesis, bracket, quote, etc…
@@ -139,8 +139,9 @@
     (setenv "TMPDIR" dl93/tmpdir))
 
   (let ((tmpdir (getenv "TMPDIR")))
-    (if (not (file-directory-p tmpdir))
-      (make-directory tmpdir))))
+    (when tmpdir
+     (when (not (file-directory-p tmpdir))
+       (make-directory tmpdir)))))
 
 
 
@@ -187,6 +188,15 @@
   (evil-leader/set-key "w1"  'delete-other-windows)
   (evil-leader/set-key "ot"  'terminal-here)
   (evil-leader/set-key "ow"  'ace-window)
+
+  ;; Code folding shortcuts using hideshow.
+  (define-key evil-normal-state-map "za" 'hs-toggle-hiding)
+  (define-key evil-normal-state-map "zc" 'hs-hide-block)
+  (define-key evil-normal-state-map "zC" 'hs-hide-all)
+  (define-key evil-normal-state-map "zx" 'hs-show-block)
+  (define-key evil-normal-state-map "zX" 'hs-show-all)
+  (define-key evil-normal-state-map "zm" 'hs-hide-level)
+
 
   ;; Ignore some directories in project search.
   (setq helm-ag-use-grep-ignore-list t)
