@@ -31,6 +31,7 @@
      version-control
      )
    dotspacemacs-additional-packages '(forest-blue-theme
+                                      gotham-theme
                                       howm
                                       monokai-theme
                                       northcode-theme
@@ -63,11 +64,12 @@
    dotspacemacs-themes (if (boundp 'dl93/default-themes)
                            dl93/default-themes
                          '(monokai
+                           gotham
                            spacemacs-dark
                            spacemacs-light))
    dotspacemacs-colorize-cursor-according-to-state t
-   dotspacemacs-default-font '("Iosevka"
-                               :size 16
+   dotspacemacs-default-font '("Hack"
+                               :size 15
                                :weight normal
                                :width normal
                                :powerline-scale 1.1)
@@ -165,6 +167,23 @@
       (let ((file (tramp-file-name-localname (tramp-dissect-file-name file))))
         (replace-regexp-in-string (concat "\\`" dir) "" file))))
 
+  (defun dl93/find-project-venv ()
+    (let ((potential-venvs '("venv" "env"))
+          (picked-venv))
+      (dolist (potential-venv (reverse potential-venvs) picked-venv)
+        (let ((venv (concat (file-name-as-directory (projectile-project-root)) potential-venv)))
+          (when (file-directory-p venv)
+            (setq picked-venv venv))))))
+
+  ;; Convenience function to load virtual env from projects more easliy.
+  (defun dl93/projectile-activate-venv ()
+    (interactive)
+    (let ((venv-location (dl93/find-project-venv)))
+      (message "Loading virtual environment: %s" venv-location)
+      (pyvenv-activate venv-location)))
+
+  (evil-leader/set-key-for-mode 'python-mode "vv" 'dl93/projectile-activate-venv)
+
 
   (ido-mode -1)
 
@@ -186,11 +205,13 @@
   (find-a-file-defun dl93/find-notes "~/org/notes.org")
 
   ;; Global shortcuts.
-  (evil-leader/set-key "fa"  'dl93/find-notes)
+  (evil-leader/set-key "fa" 'dl93/find-notes)
   (evil-leader/set-key "fed" 'dl93/find-dot-spacemacs)
-  (evil-leader/set-key "w1"  'delete-other-windows)
-  (evil-leader/set-key "ot"  'terminal-here)
-  (evil-leader/set-key "ow"  'ace-window)
+  (evil-leader/set-key "ot" 'terminal-here)
+  (evil-leader/set-key "ow" 'ace-window)
+  (evil-leader/set-key "pO" 'org-projectile/goto-todos)
+  (evil-leader/set-key "po" 'projectile-find-file-other-window)
+  (evil-leader/set-key "w1" 'delete-other-windows)
 
   ;; Code folding shortcuts using hideshow.
   (define-key evil-normal-state-map "za" 'hs-toggle-hiding)
@@ -203,6 +224,7 @@
 
   ;; Ignore some directories in project search.
   (setq helm-ag-use-grep-ignore-list t)
+  (setq helm-ag-command-option "--noaffinity") ;; Affinity causes problems on PPP1 with AG.
   (setq helm-grep-ignored-directories '(".git/" "build/"))
 
   ;; C/C++
