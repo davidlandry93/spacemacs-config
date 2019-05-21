@@ -33,6 +33,7 @@
    dotspacemacs-additional-packages '(forest-blue-theme
                                       gotham-theme
                                       howm
+                                      mediawiki
                                       monokai-theme
                                       northcode-theme
                                       openwith)
@@ -232,16 +233,15 @@
   (evil-leader/set-key-for-mode 'c++-mode "fr" 'clang-format-region)
 
   ;; org-mode
-  (setq org-agenda-files '("~/org/")
+  (setq org-agenda-files '("~/gtd/")
         org-catch-invisible-edits "show"
-        org-default-notes-file "~/org/inbox.org"
-        org-directory "~/org/"
+        org-default-notes-file "~/gtd/inbox.org"
+        org-directory "~/gtd/"
         org-enforce-todo-dependencies t
+        org-icalendar-use-scheduled '(event-if-todo)
         org-refile-targets '((org-agenda-files :maxlevel . 4))
         org-tags-match-list-sublevels 'indented
-        org-todo-keywords '((sequence "BACKLOG" "TODO" "IN PROGRESS" "WAITING" "|" "DONE")
-                            (sequence "QUESTION" "|" "ANSWER")
-                            (sequence "TODISCUSS" "|" "DISCUSSED"))
+        org-todo-keywords '((sequence "BACKLOG" "TODO" "NEXT" "WAITING" "|" "DONE"))
         org-refile-targets '((nil :maxlevel . 4)
                              (org-agenda-files :maxlevel . 4)))
   (evil-leader/set-key-for-mode 'org-mode "t" 'org-todo)
