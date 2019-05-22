@@ -69,11 +69,13 @@
                            spacemacs-dark
                            spacemacs-light))
    dotspacemacs-colorize-cursor-according-to-state t
-   dotspacemacs-default-font '("Hack"
-                               :size 15
-                               :weight normal
-                               :width normal
-                               :powerline-scale 1.1)
+   dotspacemacs-default-font (if (boundp 'dl93/font)
+                                 dl93/font
+                               '("Hack"
+                                 :size 15
+                                 :weight normal
+                                 :width normal
+                                 :powerline-scale 1.1))
    dotspacemacs-leader-key "SPC"
    dotspacemacs-emacs-command-key "SPC"
    dotspacemacs-ex-command-key ":"
@@ -202,8 +204,7 @@
   (defmacro find-a-file-defun (defun-name file)
     `(defun ,defun-name () (interactive) (find-file-existing ,file)))
 
-  (find-a-file-defun dl93/find-dot-spacemacs "~/repos/eccc-spacemacs-config/dotspacemacs.el")
-  (find-a-file-defun dl93/find-notes "~/org/notes.org")
+  (find-a-file-defun dl93/find-dot-spacemacs "~/repos/spacemacs-config/dotspacemacs.el")
 
   ;; Global shortcuts.
   (evil-leader/set-key "fa" 'dl93/find-notes)
