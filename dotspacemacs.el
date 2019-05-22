@@ -248,6 +248,14 @@
 
   (add-hook 'org-mode-hook (lambda() (org-indent-mode -1)))
 
+
+
+  (setq org-agenda-custom-commands
+        '(("c" "Next @work"
+           ((tags-todo "@work"))
+           ((org-agenda-sorting-strategy '(priority-down))))))
+
+
   ;; Bibtex
   (let ((bibliography-files '("~/papers/database.bib"))
         (paper-directory "~/papers/")
