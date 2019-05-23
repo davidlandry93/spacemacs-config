@@ -149,7 +149,9 @@
   (let ((tmpdir (getenv "TMPDIR")))
     (when tmpdir
      (when (not (file-directory-p tmpdir))
-       (make-directory tmpdir)))))
+       (make-directory tmpdir))))
+
+  (setq custom-file "~/.spacemacs.custom"))
 
 
 
