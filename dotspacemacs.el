@@ -124,7 +124,7 @@
    ;;                       text-mode
    ;;   :size-limit-kb 1000)
    ;; (default nil)
-   dotspacemacs-line-numbers t
+   dotspacemacs-line-numbers '(:relative nil :disabled-for-modes org-mode markdown-mode)
    dotspacemacs-folding-method 'origami
    dotspacemacs-smartparens-strict-mode nil
    ;; If non-nil pressing the closing parenthesis `)' key in insert mode passes
@@ -234,6 +234,9 @@
 
   ;; org-mode
   (setq org-agenda-files '("~/gtd/")
+        org-agenda-todo-ignore-scheduled 'future
+        org-agenda-todo-ignore-timestamp 'future
+        org-agenda-tags-todo-honor-ignore-options t
         org-catch-invisible-edits "show"
         org-default-notes-file "~/gtd/inbox.org"
         org-directory "~/gtd/"
@@ -244,9 +247,16 @@
         org-todo-keywords '((sequence "BACKLOG" "TODO" "NEXT" "WAITING" "|" "DONE"))
         org-refile-targets '((nil :maxlevel . 4)
                              (org-agenda-files :maxlevel . 4)))
-  (evil-leader/set-key-for-mode 'org-mode "t" 'org-todo)
+  ;; (evil-leader/set-key-for-mode 'org-mode "t" 'org-todo)
 
   (add-hook 'org-mode-hook (lambda() (org-indent-mode -1)))
+
+  (setq org-agenda-custom-commands
+        '(("z" "Next @work" todo "NEXT"
+           ((org-agenda-tag-filter-preset '("+@work"))))
+          ("x" "Next @home" todo "NEXT"
+           ((org-agenda-tag-filter-preset '("+@home"))))))
+
 
   ;; Bibtex
   (let ((bibliography-files '("~/papers/database.bib"))
