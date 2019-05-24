@@ -20,6 +20,7 @@
      helm
      html
      javascript
+     latex
      markdown
      org
      python
@@ -36,7 +37,9 @@
                                       mediawiki
                                       monokai-theme
                                       northcode-theme
-                                      openwith)
+                                      openwith
+                                      zenburn-theme
+                                      cyberpunk-theme)
    dotspacemacs-frozen-packages '()
    dotspacemacs-excluded-packages '()
    dotspacemacs-install-packages 'used-only))
@@ -247,7 +250,7 @@
         org-icalendar-use-scheduled '(event-if-todo)
         org-refile-targets '((org-agenda-files :maxlevel . 4))
         org-tags-match-list-sublevels 'indented
-        org-todo-keywords '((sequence "BACKLOG" "TODO" "NEXT" "WAITING" "|" "DONE"))
+        org-todo-keywords '((sequence "BACKLOG" "TODO" "NEXT" "WAITING" "|" "DONE" "CANCELLED"))
         org-refile-targets '((nil :maxlevel . 4)
                              (org-agenda-files :maxlevel . 4)))
   ;; (evil-leader/set-key-for-mode 'org-mode "t" 'org-todo)
@@ -258,7 +261,17 @@
         '(("z" "Next @work" todo "NEXT"
            ((org-agenda-tag-filter-preset '("+@work"))))
           ("x" "Next @home" todo "NEXT"
-           ((org-agenda-tag-filter-preset '("+@home"))))))
+           ((org-agenda-tag-filter-preset '("+@home"))))
+          ("d" "Done @work" agenda ""
+           ((org-agenda-start-with-log-mode '(closed))
+            (org-agenda-start-day "-7d")
+            (org-agenda-tag-filter-preset '("+@work"))
+            (org-agenda-span 14)))))
+
+  (defun dl93/org-todo-done ()
+    (interactive)
+    (org-todo "DONE"))
+  (evil-leader/set-key-for-mode 'org-mode "D" 'dl93/org-todo-done)
 
 
 
