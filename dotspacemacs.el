@@ -19,6 +19,8 @@
      git
      helm
      html
+     (imenu-list :variables
+                 imenu-list-position 'left)
      javascript
      markdown
      org
@@ -37,6 +39,7 @@
                                       monokai-theme
                                       northcode-theme
                                       openwith
+                                      org-super-agenda
                                       zenburn-theme
                                       cyberpunk-theme)
    dotspacemacs-frozen-packages '()
@@ -254,18 +257,22 @@
                              (org-agenda-files :maxlevel . 4)))
   ;; (evil-leader/set-key-for-mode 'org-mode "t" 'org-todo)
 
-  (add-hook 'org-mode-hook (lambda() (org-indent-mode -1)))
+  (add-hook 'org-mode-hook (lambda() (org-indent-mode -1) (org-super-agenda-mode t)))
 
   (setq org-agenda-custom-commands
-        '(("z" "Next @work" todo "NEXT"
-           ((org-agenda-tag-filter-preset '("+@work"))))
-          ("x" "Next @home" todo "NEXT"
-           ((org-agenda-tag-filter-preset '("+@home"))))
+        '(("x" "Next @home" todo "NEXT"
+           ((org-agenda-tag-filter-preset '("+@home"))
+            (org-super-agenda-groups
+             '((:auto-parent t)))))
           ("d" "Done @work" agenda ""
            ((org-agenda-start-with-log-mode '(closed))
             (org-agenda-start-day "-7d")
             (org-agenda-tag-filter-preset '("+@work"))
-            (org-agenda-span 14)))))
+            (org-agenda-span 14)))
+          ("z" "Next @work" todo "NEXT"
+           ((org-agenda-tag-filter-preset '("+@work"))
+            (org-super-agenda-groups
+             '((:auto-parent t)))))))
 
   (defun dl93/org-todo-done ()
     (interactive)
