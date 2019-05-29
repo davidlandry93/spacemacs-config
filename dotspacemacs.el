@@ -245,6 +245,7 @@
         org-agenda-todo-ignore-scheduled 'future
         org-agenda-todo-ignore-timestamp 'future
         org-agenda-tags-todo-honor-ignore-options t
+        org-archive-location "~/gtd/archive.org::datetree/"
         org-catch-invisible-edits "show"
         org-default-notes-file "~/gtd/inbox.org"
         org-directory "~/gtd/"
@@ -257,10 +258,10 @@
                              (org-agenda-files :maxlevel . 4)))
   ;; (evil-leader/set-key-for-mode 'org-mode "t" 'org-todo)
 
-  (add-hook 'org-mode-hook (lambda() (org-indent-mode -1) (org-super-agenda-mode t)))
+  (add-hook 'org-mode-hook (lambda() (org-indent-mode -1) (org-super-agenda-mode -1)))
 
   (setq org-agenda-custom-commands
-        '(("x" "Next @home" todo "NEXT"
+        '(("x" "Next @home" todo "NEXT|TODO"
            ((org-agenda-tag-filter-preset '("+@home"))
             (org-super-agenda-groups
              '((:auto-parent t)))))
@@ -269,7 +270,7 @@
             (org-agenda-start-day "-7d")
             (org-agenda-tag-filter-preset '("+@work"))
             (org-agenda-span 14)))
-          ("z" "Next @work" todo "NEXT"
+          ("z" "Next @work" todo "NEXT|TODO"
            ((org-agenda-tag-filter-preset '("+@work"))
             (org-super-agenda-groups
              '((:auto-parent t)))))))
