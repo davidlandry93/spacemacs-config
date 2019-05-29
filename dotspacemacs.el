@@ -242,6 +242,7 @@
 
   ;; org-mode
   (setq org-agenda-files '("~/gtd/")
+        org-agenda-file-regexp "\\`[^.].*\\.org\\'"
         org-agenda-todo-ignore-scheduled 'future
         org-agenda-todo-ignore-timestamp 'future
         org-agenda-tags-todo-honor-ignore-options t
@@ -258,10 +259,14 @@
                              (org-agenda-files :maxlevel . 4)))
   ;; (evil-leader/set-key-for-mode 'org-mode "t" 'org-todo)
 
+
+  (setq org-stuck-projects '("+projects-reference-TODO=\"DONE\"-TODO=\"BACKLOG\"-TODO=\"CANCELLED\"-TODO=\"TODO\"" ("NEXT" "WAITING") nil ""))
+
+
   (add-hook 'org-mode-hook (lambda() (org-indent-mode -1) (org-super-agenda-mode -1)))
 
   (setq org-agenda-custom-commands
-        '(("x" "Next @home" todo "NEXT|TODO"
+        '(("x" "Next @home" todo "NEXT"
            ((org-agenda-tag-filter-preset '("+@home"))
             (org-super-agenda-groups
              '((:auto-parent t)))))
@@ -270,7 +275,7 @@
             (org-agenda-start-day "-7d")
             (org-agenda-tag-filter-preset '("+@work"))
             (org-agenda-span 14)))
-          ("z" "Next @work" todo "NEXT|TODO"
+          ("z" "Next @work" todo "NEXT"
            ((org-agenda-tag-filter-preset '("+@work"))
             (org-super-agenda-groups
              '((:auto-parent t)))))))
