@@ -19,6 +19,8 @@
      git
      helm
      html
+     (imenu-list :variables
+                 imenu-list-position 'left)
      javascript
      latex
      markdown
@@ -31,13 +33,15 @@
      syntax-checking
      version-control
      )
-   dotspacemacs-additional-packages '(forest-blue-theme
+   dotspacemacs-additional-packages '(dracula-theme
+                                      forest-blue-theme
                                       gotham-theme
                                       howm
                                       mediawiki
                                       monokai-theme
                                       northcode-theme
                                       openwith
+                                      org-super-agenda
                                       zenburn-theme
                                       cyberpunk-theme)
    dotspacemacs-frozen-packages '()
@@ -240,9 +244,11 @@
 
   ;; org-mode
   (setq org-agenda-files '("~/gtd/")
+        org-agenda-file-regexp "\\`[^.].*\\.org\\'"
         org-agenda-todo-ignore-scheduled 'future
         org-agenda-todo-ignore-timestamp 'future
         org-agenda-tags-todo-honor-ignore-options t
+        org-archive-location "~/gtd/archive.org::datetree/"
         org-catch-invisible-edits "show"
         org-default-notes-file "~/gtd/inbox.org"
         org-directory "~/gtd/"
@@ -255,18 +261,26 @@
                              (org-agenda-files :maxlevel . 4)))
   ;; (evil-leader/set-key-for-mode 'org-mode "t" 'org-todo)
 
-  (add-hook 'org-mode-hook (lambda() (org-indent-mode -1)))
+
+  (setq org-stuck-projects '("+projects-reference-TODO=\"DONE\"-TODO=\"BACKLOG\"-TODO=\"CANCELLED\"-TODO=\"TODO\"" ("NEXT" "WAITING") nil ""))
+
+
+  (add-hook 'org-mode-hook (lambda() (org-indent-mode -1) (org-super-agenda-mode -1)))
 
   (setq org-agenda-custom-commands
-        '(("z" "Next @work" todo "NEXT"
-           ((org-agenda-tag-filter-preset '("+@work"))))
-          ("x" "Next @home" todo "NEXT"
-           ((org-agenda-tag-filter-preset '("+@home"))))
+        '(("x" "Next @home" todo "NEXT"
+           ((org-agenda-tag-filter-preset '("+@home"))
+            (org-super-agenda-groups
+             '((:auto-parent t)))))
           ("d" "Done @work" agenda ""
            ((org-agenda-start-with-log-mode '(closed))
             (org-agenda-start-day "-7d")
             (org-agenda-tag-filter-preset '("+@work"))
-            (org-agenda-span 14)))))
+            (org-agenda-span 14)))
+          ("z" "Next @work" todo "NEXT"
+           ((org-agenda-tag-filter-preset '("+@work"))
+            (org-super-agenda-groups
+             '((:auto-parent t)))))))
 
   (defun dl93/org-todo-done ()
     (interactive)
