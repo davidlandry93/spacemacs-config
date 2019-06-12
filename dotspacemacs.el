@@ -32,7 +32,8 @@
      syntax-checking
      version-control
      )
-   dotspacemacs-additional-packages '(forest-blue-theme
+   dotspacemacs-additional-packages '(dracula-theme
+                                      forest-blue-theme
                                       gotham-theme
                                       howm
                                       mediawiki
