@@ -39,6 +39,7 @@
                                       howm
                                       mediawiki
                                       monokai-theme
+                                      multi-line
                                       northcode-theme
                                       openwith
                                       org-super-agenda
@@ -63,10 +64,8 @@
    ;; `recents' `bookmarks' `projects' `agenda' `todos'."
    ;; List sizes may be nil, in which case
    ;; `spacemacs-buffer-startup-lists-length' takes effect.
-   dotspacemacs-startup-lists '((todos . 5)
-                                (agenda . 5)
-                                (recents . 5)
-                                (projects . 7))
+   dotspacemacs-startup-lists '((recents . 5)
+                                (bookmarks . 5))
    dotspacemacs-startup-buffer-responsive t
    dotspacemacs-scratch-mode 'text-mode
    dotspacemacs-themes (if (boundp 'dl93/default-themes)
@@ -214,6 +213,8 @@
     `(defun ,defun-name () (interactive) (find-file-existing ,file)))
 
   (find-a-file-defun dl93/find-dot-spacemacs "~/repos/spacemacs-config/dotspacemacs.el")
+
+  (global-set-key (kbd "M-;") 'multi-line)
 
   ;; Global shortcuts.
   (evil-leader/set-key "fa" 'dl93/find-notes)
