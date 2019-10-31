@@ -1,0 +1,16 @@
+# -*- mode: snippet -*-
+# name: cli
+# key: cli
+# --
+"""$1"""
+import argparse
+
+
+def cli():
+    parser = argparse.ArgumentParser()
+    parser.add_argument($0)
+    args = parser.parse_args()
+
+
+if __name__ == '__main__':
+    cli()

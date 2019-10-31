@@ -10,7 +10,11 @@
    dotspacemacs-configuration-layer-path '()
    dotspacemacs-configuration-layers
    '(
-     auto-completion
+     (auto-completion
+      :variables
+      auto-completion-private-snippets-directory
+      (concat (file-name-as-directory (getenv "HOME"))
+              "repos/spacemacs-config/snippets"))
      better-defaults
      bibtex
      c-c++
