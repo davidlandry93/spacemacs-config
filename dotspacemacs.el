@@ -10,9 +10,15 @@
    dotspacemacs-configuration-layer-path '()
    dotspacemacs-configuration-layers
    '(
-     auto-completion
+     (auto-completion :variables
+                      auto-completion-private-snippets-directory "~/repos/spacemacs-config/snippets"
+                      auto-completion-return-key-behavior 'complete
+                      auto-completion-tab-key-behavior 'cycle
+                      auto-completion-complete-with-key-sequence "jk")
+
      better-defaults
      bibtex
+     cmake
      c-c++
      csv
      emacs-lisp
@@ -23,16 +29,22 @@
                  imenu-list-position 'left)
      javascript
      latex
+     lsp
      markdown
      org
      python
+     (scala :variables
+            scala-backend 'scala-metals)
      (shell :variables
             shell-default-height 30
             shell-default-position 'bottom)
      spell-checking
      syntax-checking
      version-control
-     )
+     (vue :variables vue-backend 'dumb
+          web-mode-markup-indent-offset 2
+          web-mode-javascript-indentation 2)
+     yaml)
    dotspacemacs-additional-packages '(dracula-theme
                                       forest-blue-theme
                                       gotham-theme
@@ -43,6 +55,7 @@
                                       northcode-theme
                                       openwith
                                       org-super-agenda
+                                      panda-theme
                                       zenburn-theme
                                       cyberpunk-theme)
    dotspacemacs-frozen-packages '()
@@ -162,6 +175,14 @@
 
 
 (defun dotspacemacs/user-config ()
+  (require 'iso-transl)
+
+  (when (boundp 'dl93/add-to-path)
+    (setenv "PATH" (concat (getenv "PATH") dl93/add-to-path)))
+
+  (when (boundp 'dl93/add-to-exec-path)
+    (setq exec-path (append exec-path dl93/add-to-exec-path)))
+
   ;; Git-gitter workaround with tramp.
   ;; See https://github.com/nonsequitur/git-gutter-plus/issues/42
   (with-eval-after-load 'git-gutter+
@@ -185,6 +206,14 @@
         (let ((venv (concat (file-name-as-directory (projectile-project-root)) potential-venv)))
           (when (file-directory-p venv)
             (setq picked-venv venv))))))
+
+
+  (add-hook 'python-mode-hook (lambda ()
+                                (setq flycheck-checker 'python-flake8)
+                                (flyspell-mode 0)))
+
+  (setq-default js2-basic-offset 2
+                js-indent-level 2)
 
   ;; Convenience function to load virtual env from projects more easliy.
   (defun dl93/projectile-activate-venv ()
@@ -215,6 +244,8 @@
   (find-a-file-defun dl93/find-dot-spacemacs "~/repos/spacemacs-config/dotspacemacs.el")
 
   (global-set-key (kbd "M-;") 'multi-line)
+
+  (global-set-key (kbd "M-/") 'yas-expand)
 
   ;; Global shortcuts.
   (evil-leader/set-key "fa" 'dl93/find-notes)
@@ -309,4 +340,6 @@
 
   ;; Howm
   (setq howm-directory "~/howm/"
-        howm-file-name-format "%Y/%U/%Y-%m-%d-%H%M%S.txt"))
+        howm-file-name-format "%Y/%U/%Y-%m-%d-%H%M%S.txt")
+
+  (with-eval-after-load "helm-grep" (add-to-list 'helm-grep-ignored-files "*.jar")))
